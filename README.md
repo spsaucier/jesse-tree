@@ -16,3 +16,5 @@ npm install
 ```bash
 cp .env.example .env
 ```
+
+4. Run `npm run dev`
