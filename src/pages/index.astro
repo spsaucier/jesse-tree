@@ -1,0 +1,173 @@
+---
+import { getCardData } from "../lib/api";
+const cards = await getCardData();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advent Scripture Cards</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="card-grid">
+      {
+        cards.map((card) => (
+          <div class="card">
+            <header class="card-header">
+              <div class="header-text">
+                <div class="card-date">{card.day}</div>
+                <div class="card-person">{card.person}</div>
+              </div>
+              {card.iconUrl && (
+                <div class="symbol-container">
+                  <div class="symbol-text">
+                    {card.symbol.split(" or ").map((sym, i) => (
+                      <div>{sym}</div>
+                    ))}
+                  </div>
+                  <div class="icons">
+                    {card.iconUrl.split(" or ").map((url, i) => (
+                      <img
+                        class="card-symbol"
+                        src={url}
+                        alt={card.symbol.split(" or ")[i]}
+                        title={card.symbol.split(" or ")[i]}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </header>
+            <div class="card-reading">
+              <div class="reference">{card.reading}</div>
+              <div class="verse-content" set:html={card.verseContent} />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </body>
+</html>
+
+<style>
+  body {
+    font-family: "Gentium Book Plus", serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f5f5f5;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    break-inside: avoid;
+    page-break-inside: avoid;
+    position: relative;
+  }
+
+  .card-date {
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 10px;
+  }
+
+  .card-person {
+    font-size: 1.2em;
+    color: #222;
+    margin-bottom: 10px;
+  }
+
+  .card-symbol {
+    width: 80px;
+    height: 80px;
+  }
+
+  .card-reading {
+    margin: 15px 0;
+    line-height: 1.4;
+  }
+
+  .reference {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .verse-content {
+    font-style: italic;
+    white-space: preserve-breaks;
+  }
+
+  :global(.verse-number) {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #666;
+    margin-right: 4px;
+    vertical-align: super;
+  }
+
+  @media print {
+    body {
+      background: white;
+    }
+
+    .card {
+      box-shadow: none;
+      border: 1px solid #000;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    @page {
+      margin: 0.5cm;
+    }
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+
+  .header-text {
+    flex: 1;
+  }
+
+  .symbol-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .icons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .symbol-text {
+    text-align: right;
+    font-size: 0.9em;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+</style>
